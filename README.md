@@ -1,4 +1,4 @@
-# Đồ án: Hệ thống Quản lý Nhà trọ / Ký túc xá
+# Đồ án: Hệ thống Quản lý Nhà trọ 
 
 Ứng dụng quản lý nhà trọ xây dựng trên nền tảng .NET WPF theo mô hình MVVM.
 
