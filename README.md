@@ -12,10 +12,12 @@
 
 ## 📌 Mục lục
 - [Tính năng nổi bật](#-tính-năng-nổi-bật)
-- [Luồng nghiệp vụ chính](#-luồng-nghiệp-vụ-chính)
+- [Quy tắc nghiệp vụ](#-quy-tắc-nghiệp-vụ)
+- [Tài khoản demo & Phân quyền](#-tài-khoản-demo--phân-quyền)
 - [Công nghệ sử dụng](#-công-nghệ-sử-dụng)
 - [Cấu trúc dự án](#-cấu-trúc-dự-án)
 - [Lộ trình phát triển (8 Giai đoạn)](#-lộ-trình-phát-triển-8-giai-đoạn)
+- [Tài liệu & Sản phẩm bàn giao](#-tài-liệu--sản-phẩm-bàn-giao)
 - [Cài đặt & Chạy dự án](#-cài-đặt--chạy-dự-án)
 
 ---
@@ -33,16 +35,53 @@
 
 ---
 
-## 🔄 Luồng nghiệp vụ chính
+## ⚙️ Quy tắc nghiệp vụ
+
+* **Trạng thái phòng:** Tự động chuyển đổi giữa các trạng thái `Trống` (Xanh lá), `Đang thuê` (Xanh dương), `Sắp hết hạn hợp đồng` (Vàng), và `Bảo trì / Sự cố` (Đỏ).
+* **Tính tiền phòng vào/ra giữa tháng:** Tự động quy đổi tiền phòng theo số ngày thực tế ở khi khách bắt đầu thuê hoặc trả phòng không trọn tháng.
+* **Quy trình cọc & Hoàn cọc:** Ghi nhận tiền cọc khi ký hợp đồng, tự động khấu trừ công nợ hoặc phí hư hại tài sản khi chấm dứt hợp đồng để tính số tiền hoàn cọc thực tế.
+* **Chốt điện nước:** Bắt buộc chỉ số mới $\ge$ chỉ số cũ. Hệ thống tự động cảnh báo nếu lượng tiêu thụ vượt mức trung bình 200%.
+
+---
+
+## 🔑 Tài khoản demo & Phân quyền
+
+| Tài khoản | Mật khẩu | Vai trò | Quyền hạn |
+| :--- | :--- | :--- | :--- |
+| `admin` | `admin123` | **Quản trị viên** | Full quyền: Quản lý phòng, hợp đồng, cài đặt đơn giá, xem báo cáo doanh thu & sao lưu CSDL |
+| `staff` | `staff123` | **Nhân viên** | Lập hóa đơn, chốt chỉ số điện nước, thu tiền công nợ, tiếp nhận báo sự cố |
+
+*(Lưu ý: Mật khẩu trong CSDL được mã hóa an toàn bằng thuật toán Băm Mật Khẩu)*
+
+---
+
+## 🛠 Công nghệ sử dụng
+
+| Lớp (Layer) | Công nghệ & Thư viện |
+| :--- | :--- |
+| **Framework** | **.NET 10.0** (Windows WPF) |
+| **Kiến trúc UI** | **MVVM Pattern** (`CommunityToolkit.Mvvm`), Dependency Injection |
+| **Database & ORM** | **Entity Framework Core 10**, SQLite / SQL Server LocalDB, Fluent API, Migrations |
+| **Thiết kế Pattern** | Repository & Service Pattern |
+| **Báo cáo & Export** | Thư viện Xuất file PDF (Hóa đơn/Hợp đồng) & Excel (Báo cáo doanh thu) |
+| **Kiểm thử** | Unit Test (Logic tính tiền, chốt điện nước, hoàn cọc) & Test Case thủ công |
+
+---
+
+## 📁 Cấu trúc dự án
 
 ```text
-Đăng nhập (Phân quyền)
-   │
-   ├──► Xem Sơ đồ phòng trực quan ──► Chọn phòng ──► Tạo Hợp đồng / Cọc
-   │                                                    │
-   ├──► Chốt số Điện / Nước hàng tháng ◄────────────────┘
-   │         │
-   │         ▼
-   ├──► Lập Hóa đơn hàng loạt ──► Thu tiền / Thanh toán ──► Xuất PDF Hóa đơn
-   │                                  │
-   └──► Báo cáo Doanh thu & Dashboard ◄─┴── Export Excel
+QuanLyNhaTro/
+├── docs/                      # Sơ đồ ERD, Use Case, Figma Design, Báo cáo Word
+└── src/                       # Mã nguồn chính dự án
+    ├── QuanLyNhaTro.sln       # Visual Studio Solution (.NET 10)
+    └── QuanLyNhaTro/
+        ├── Configurations/    # Cấu hình App, Dependency Injection
+        ├── Data/              # DbContext, Migrations, Seed Data (EF Core)
+        ├── Models/            # Entity Models (Phong, KhachThue, HopDong, HoaDon...)
+        ├── Repositories/      # Tầng truy xuất dữ liệu (Repository Pattern)
+        ├── Services/          # Tầng xử lý logic nghiệp vụ (Service Pattern)
+        ├── ViewModels/        # ViewModels điều hướng & Binding dữ liệu
+        ├── Views/             # Giao diện XAML (MainWindow, Sidebar, Controls)
+        ├── Converters/        # ValueConverters cho XAML Binding
+        └── Helpers/           # PDF/Excel Exporter, Password Hasher, Validation
