@@ -1,12 +1,132 @@
-﻿<Window x:Class="DoAn.MainWindow"
+<Window x:Class="DoAn.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:DoAn"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        xmlns:vm="clr-namespace:DoAn.ViewModels"
+        xmlns:views="clr-namespace:DoAn.Views"
+        Title="Phần mềm Quản lý Nhà trọ" Height="720" Width="1280"
+        WindowStartupLocation="CenterScreen" Background="#F1F5F9">
 
+    <!-- Ánh xạ tự động giữa ViewModel và View (DataTemplate) -->
+    <!-- Ánh xạ tự động giữa ViewModel và View (DataTemplate) -->
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:DashboardViewModel}">
+            <views:DashboardView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:PhongViewModel}">
+            <views:PhongView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:KhachThueViewModel}">
+            <views:KhachThueView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:HopDongViewModel}">
+            <views:HopDongView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SoDoPhongViewModel}">
+            <views:SoDoPhongView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:DienNuocViewModel}">
+            <views:DienNuocView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:HoaDonViewModel}">
+            <views:HoaDonView/>
+        </DataTemplate>
+        <!-- Style dùng chung cho các nút trên thanh Sidebar (Dòng 27) -->
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="Margin" Value="12,4"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#334155"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <!-- Cột Sidebar cố định -->
+            <ColumnDefinition Width="*"/>
+            <!-- Cột Nội dung chính -->
+        </Grid.ColumnDefinitions>
+
+        <!-- 1. SIDEBAR BÊN TRÁI -->
+        <Border Grid.Column="0" Background="#1E293B">
+            <DockPanel>
+                <!-- Logo & Tên nhà trọ -->
+                <StackPanel DockPanel.Dock="Top" Margin="20,24,20,20">
+                    <TextBlock Text="🏢 QUẢN LÝ NHÀ TRỌ" Foreground="White" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding TenNhaTro}" Foreground="#94A3B8" FontSize="13" Margin="0,4,0,0"/>
+                    <Separator Background="#334155" Margin="0,16,0,0"/>
+                </StackPanel>
+
+                <!-- Nút Đăng xuất ở dưới cùng -->
+                <Button DockPanel.Dock="Bottom" Content="🚪 Đăng xuất" Style="{StaticResource SidebarButtonStyle}"
+                        Foreground="#F87171" Margin="12,16" Click="BtnLogout_Click"/>
+
+                <!-- Danh sách Menu điều hướng -->
+                <StackPanel>
+                    <Button Content="📊  Tổng quan (Dashboard)" Style="{StaticResource SidebarButtonStyle}"
+                            Command="{Binding ChuyenManHinhCommand}" CommandParameter="Dashboard"/>
+                    <Button Content="🗺️  Sơ đồ phòng" Style="{StaticResource SidebarButtonStyle}"
+                            Command="{Binding ChuyenManHinhCommand}" CommandParameter="SoDoPhong"/>
+                    <Button Content="🚪  Quản lý Phòng" Style="{StaticResource SidebarButtonStyle}"
+                            Command="{Binding ChuyenManHinhCommand}" CommandParameter="Phong"/>
+                    <Button Content="👥  Khách thuê" Style="{StaticResource SidebarButtonStyle}"
+                            Command="{Binding ChuyenManHinhCommand}" CommandParameter="KhachThue"/>
+                    <Button Content="📄  Hợp đồng thuê" Style="{StaticResource SidebarButtonStyle}"
+                            Command="{Binding ChuyenManHinhCommand}" CommandParameter="HopDong"/>
+                    <Button Content="⚡  Chốt Điện &amp; Nước" Style="{StaticResource SidebarButtonStyle}"
+                            Command="{Binding ChuyenManHinhCommand}" CommandParameter="DienNuoc"/>
+                    <Button Content="🧾  Hóa đơn &amp; Thu tiền" Style="{StaticResource SidebarButtonStyle}"
+                            Command="{Binding ChuyenManHinhCommand}" CommandParameter="HoaDon"/>
+                    <Button Content="🛠️  Sự cố &amp; Bảo trì" Style="{StaticResource SidebarButtonStyle}"
+                            Command="{Binding ChuyenManHinhCommand}" CommandParameter="SuCo"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- 2. VÙNG NỘI DUNG BÊN PHẢI -->
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="64"/>
+                <!-- Thanh Header -->
+                <RowDefinition Height="*"/>
+                <!-- Vùng hiển thị View động -->
+            </Grid.RowDefinitions>
+
+            <!-- Thanh Header trên cùng -->
+            <Border Grid.Row="0" Background="White" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1" Padding="24,0">
+                <Grid>
+                    <TextBlock Text="{Binding TieuDeManHinh}" FontSize="18" FontWeight="Bold" Foreground="#0F172A" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                        <Border Background="#EFF6FF" CornerRadius="16" Padding="12,6" BorderBrush="#BFDBFE" BorderThickness="1">
+                            <TextBlock Text="{Binding TenNguoiDung, StringFormat='👤 {0}'}" Foreground="#1D4ED8" FontWeight="SemiBold" FontSize="13"/>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Vùng ContentControl tự động đổi giao diện theo CurrentView -->
+            <ContentControl Grid.Row="1" Content="{Binding CurrentView}"/>
+        </Grid>
     </Grid>
 </Window>

@@ -1,0 +1,175 @@
+﻿<UserControl x:Class="DoAn.Views.SoDoPhongView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F1F5F9">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 1. THANH CÔNG CỤ LỌC & CHÚ THÍCH TRẠNG THÁI -->
+        <Border Grid.Row="0" Background="White" CornerRadius="10" Padding="16,12" Margin="0,0,0,16" BorderBrush="#E2E8F0" BorderThickness="1">
+            <DockPanel LastChildFill="False">
+                <!-- Bộ lọc bên trái -->
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="🏢 Tầng:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,6,0"/>
+                    <ComboBox ItemsSource="{Binding DanhSachTangLoc}" SelectedItem="{Binding TangLocChon}" Width="115" Height="32" VerticalContentAlignment="Center" Margin="0,0,14,0"/>
+
+                    <TextBlock Text="🎨 Trạng thái:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,6,0"/>
+                    <ComboBox ItemsSource="{Binding DanhSachTrangThaiLoc}" SelectedItem="{Binding TrangThaiLocChon}" Width="150" Height="32" VerticalContentAlignment="Center" Margin="0,0,14,0"/>
+
+                    <TextBlock Text="🔍 Tìm:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,6,0"/>
+                    <TextBox Text="{Binding TuKhoaTimKiem, UpdateSourceTrigger=PropertyChanged}" Width="160" Height="32" VerticalContentAlignment="Center" Padding="8,0"/>
+                </StackPanel>
+
+                <!-- Huy hiệu đếm số lượng theo màu bên phải -->
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Background="#ECFDF5" BorderBrush="#10B981" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="4,0">
+                        <TextBlock Text="{Binding DemTrong, StringFormat='🟢 Trống: {0}'}" Foreground="#047857" FontWeight="Bold" FontSize="12"/>
+                    </Border>
+                    <Border Background="#EFF6FF" BorderBrush="#3B82F6" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="4,0">
+                        <TextBlock Text="{Binding DemDangThue, StringFormat='🔵 Đang thuê: {0}'}" Foreground="#1D4ED8" FontWeight="Bold" FontSize="12"/>
+                    </Border>
+                    <Border Background="#FFFBEB" BorderBrush="#F59E0B" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="4,0">
+                        <TextBlock Text="{Binding DemSapHet, StringFormat='🟠 Sắp hết: {0}'}" Foreground="#B45309" FontWeight="Bold" FontSize="12"/>
+                    </Border>
+                    <Border Background="#FEF2F2" BorderBrush="#EF4444" BorderThickness="1" CornerRadius="6" Padding="10,4" Margin="4,0,0,0">
+                        <TextBlock Text="{Binding DemBaoTri, StringFormat='🔴 Bảo trì: {0}'}" Foreground="#B91C1C" FontWeight="Bold" FontSize="12"/>
+                    </Border>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- 2. VÙNG CHÍNH: LƯỚI SƠ ĐỒ PHÒNG (TRÁI) & PANEL THAO TÁC NHANH (PHẢI) -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="6.8*"/>
+                <ColumnDefinition Width="3.2*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- CỘT TRÁI: LƯỚI Ô PHÒNG ĐỔI MÀU TỰ ĐỘNG BẰNG DATATRIGGER -->
+            <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="12" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                <ListBox ItemsSource="{Binding DanhSachPhongSoDo}" SelectedItem="{Binding PhongDangChon}"
+                         BorderThickness="0" Background="Transparent"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="8"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <ContentPresenter/>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border x:Name="RoomCard" Width="195" Height="138" CornerRadius="10" Padding="14"
+                                    Background="#ECFDF5" BorderBrush="#10B981" BorderThickness="2">
+                                <StackPanel>
+                                    <!-- Dòng 1: Mã phòng + Tầng -->
+                                    <DockPanel>
+                                        <TextBlock x:Name="TxtMaPhong" Text="{Binding MaPhong}" FontSize="18" FontWeight="Bold" Foreground="#065F46"/>
+                                        <TextBlock Text="{Binding Tang, StringFormat='Tầng {0}'}" FontSize="12" Foreground="#64748B" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                                    </DockPanel>
+
+                                    <!-- Dòng 2: Trạng thái -->
+                                    <TextBlock x:Name="TxtTrangThai" Text="{Binding TenTrangThai}" FontSize="12" FontWeight="Bold" Foreground="#047857" Margin="0,4,0,6"/>
+
+                                    <!-- Dòng 3: Giá thuê -->
+                                    <TextBlock Text="{Binding GiaThue, StringFormat='💰 {0:N0} đ/tháng'}" FontSize="13" FontWeight="SemiBold" Foreground="#0F172A"/>
+
+                                    <!-- Dòng 4: Khách đang ở -->
+                                    <TextBlock Text="{Binding TenKhachHienTai, StringFormat='👤 {0}'}" FontSize="12" Foreground="#334155" Margin="0,6,0,0" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- DataTrigger tự động đổi màu Ô phòng theo TrangThai -->
+                            <DataTemplate.Triggers>
+                                <!-- 1: Đang thuê (Xanh dương) -->
+                                <DataTrigger Binding="{Binding TrangThai}" Value="1">
+                                    <Setter TargetName="RoomCard" Property="Background" Value="#EFF6FF"/>
+                                    <Setter TargetName="RoomCard" Property="BorderBrush" Value="#3B82F6"/>
+                                    <Setter TargetName="TxtMaPhong" Property="Foreground" Value="#1E40AF"/>
+                                    <Setter TargetName="TxtTrangThai" Property="Foreground" Value="#1D4ED8"/>
+                                </DataTrigger>
+                                <!-- 2: Sắp hết hạn (Vàng cam) -->
+                                <DataTrigger Binding="{Binding TrangThai}" Value="2">
+                                    <Setter TargetName="RoomCard" Property="Background" Value="#FFFBEB"/>
+                                    <Setter TargetName="RoomCard" Property="BorderBrush" Value="#F59E0B"/>
+                                    <Setter TargetName="TxtMaPhong" Property="Foreground" Value="#92400E"/>
+                                    <Setter TargetName="TxtTrangThai" Property="Foreground" Value="#B45309"/>
+                                </DataTrigger>
+                                <!-- 3: Đang bảo trì (Đỏ) -->
+                                <DataTrigger Binding="{Binding TrangThai}" Value="3">
+                                    <Setter TargetName="RoomCard" Property="Background" Value="#FEF2F2"/>
+                                    <Setter TargetName="RoomCard" Property="BorderBrush" Value="#EF4444"/>
+                                    <Setter TargetName="TxtMaPhong" Property="Foreground" Value="#991B1B"/>
+                                    <Setter TargetName="TxtTrangThai" Property="Foreground" Value="#B91C1C"/>
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <!-- CỘT PHẢI: PANEL CHI TIẾT PHÒNG & THAO TÁC NHANH -->
+            <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <TextBlock Text="📌 Chi tiết Phòng chọn" FontSize="18" FontWeight="Bold" Foreground="#0F172A"/>
+                        <Separator Background="#E2E8F0" Margin="0,10,0,12"/>
+
+                        <!-- Thông tin chi tiết của ô phòng đang click -->
+                        <TextBlock Text="{Binding PhongDangChon.TenPhong, StringFormat='🚪 {0}'}" FontSize="20" FontWeight="Bold" Foreground="#2563EB"/>
+                        <TextBlock Text="{Binding PhongDangChon.TenTrangThai}" FontSize="14" FontWeight="Bold" Margin="0,4,0,12"/>
+
+                        <TextBlock Text="{Binding PhongDangChon.TenLoaiPhong, StringFormat='• Loại phòng: {0}'}" FontSize="13" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding PhongDangChon.GiaThue, StringFormat='• Giá niêm yết: {0:N0} VNĐ/tháng'}" FontSize="13" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding PhongDangChon.TenKhachHienTai, StringFormat='• Khách đại diện: {0}'}" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding PhongDangChon.SoDienThoaiKhach, StringFormat='• SĐT khách: {0}'}" FontSize="13" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding PhongDangChon.HanHopDongText, StringFormat='• Thời hạn HĐ: {0}'}" FontSize="13" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding PhongDangChon.TienCocHienTai, StringFormat='• Tiền cọc đang giữ: {0:N0} VNĐ'}" FontSize="13" Margin="0,0,0,6"/>
+                        <TextBlock Text="{Binding PhongDangChon.GhiChuSuCo, StringFormat='• Ghi chú/Sự cố: {0}'}" FontSize="13" Foreground="#DC2626" TextWrapping="Wrap" Margin="0,0,0,16"/>
+
+                        <Separator Background="#E2E8F0" Margin="0,0,0,12"/>
+                        <TextBlock Text="⚡ THAO TÁC NHANH" FontSize="15" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,10"/>
+
+                        <!-- 1. Cho thuê nhanh (Dành cho Phòng Trống) -->
+                        <TextBlock Text="Chọn khách để cho thuê nhanh (Phòng trống):" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <ComboBox ItemsSource="{Binding DanhSachKhachThue}" SelectedItem="{Binding KhachThueNhanhChon}"
+                                  DisplayMemberPath="HoTen" Height="32" VerticalContentAlignment="Center" Margin="0,0,0,8"/>
+                        <Button Content="➕ Cho thuê nhanh (Ký HĐ 1 năm)" Command="{Binding ChoThueNhanhCommand}"
+                                Background="#10B981" Foreground="White" FontWeight="Bold" Height="36" Margin="0,0,0,12" BorderThickness="0"/>
+
+                        <!-- 2. Gia hạn & Trả phòng nhanh (Dành cho Phòng Đang thuê / Sắp hết hạn) -->
+                        <UniformGrid Columns="2" Margin="0,0,0,12">
+                            <Button Content="⏳ Gia hạn +6th" Command="{Binding GiaHanNhanhCommand}"
+                                    Background="#3B82F6" Foreground="White" FontWeight="Bold" Height="36" Margin="0,0,4,0" BorderThickness="0"/>
+                            <Button Content="🔄 Trả phòng" Command="{Binding TraPhongNhanhCommand}"
+                                    Background="#F59E0B" Foreground="White" FontWeight="Bold" Height="36" Margin="4,0,0,0" BorderThickness="0"/>
+                        </UniformGrid>
+
+                        <!-- 3. Báo sự cố bảo trì / Mở lại phòng -->
+                        <TextBlock Text="Nội dung sự cố / bảo trì (nếu có):" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                        <TextBox Text="{Binding NoiDungBaoSuCo}" Height="30" VerticalContentAlignment="Center" Padding="8,0" Margin="0,0,0,8"/>
+                        <Button Content="🛠️ Báo Bảo trì / Hoàn tất Bảo trì" Command="{Binding ChuyenTrangThaiBaoTriCommand}"
+                                Background="#EF4444" Foreground="White" FontWeight="Bold" Height="36" BorderThickness="0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>

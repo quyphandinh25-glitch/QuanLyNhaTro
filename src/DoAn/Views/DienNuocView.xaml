@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="DoAn.Views.DienNuocView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F1F5F9">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6.8*"/>
+            <ColumnDefinition Width="3.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- CỘT TRÁI: BẢNG NHẬP CHỈ SỐ ĐIỆN NƯỚC HÀNG THÁNG -->
+        <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="16" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
+            <DockPanel>
+                <!-- Thanh chọn kỳ Tháng/Năm -->
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,14">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="📅 Kỳ chốt số - Tháng:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                        <ComboBox ItemsSource="{Binding DanhSachThang}" SelectedItem="{Binding ThangChon}" Width="70" Height="32" VerticalContentAlignment="Center" Margin="0,0,12,0"/>
+
+                        <TextBlock Text="Năm:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                        <ComboBox ItemsSource="{Binding DanhSachNam}" SelectedItem="{Binding NamChon}" Width="90" Height="32" VerticalContentAlignment="Center" Margin="0,0,12,0"/>
+                    </StackPanel>
+
+                    <Button Content="💾 LƯU CHỈ SỐ ĐIỆN NƯỚC" Command="{Binding LuuChiSoDienNuocCommand}"
+                            HorizontalAlignment="Right" Background="#2563EB" Foreground="White" FontWeight="Bold"
+                            Padding="16,0" Height="36" BorderThickness="0" Cursor="Hand"/>
+                </DockPanel>
+
+                <TextBlock DockPanel.Dock="Top" Text="💡 Mẹo: Bạn có thể nhập trực tiếp Chỉ số Điện mới và Nước mới ngay trên các ô của bảng dưới đây rồi bấm Lưu."
+                           Foreground="#64748B" FontSize="12" Margin="0,0,0,10"/>
+
+                <!-- Bảng DataGrid cho phép sửa trực tiếp cột Chỉ số Mới -->
+                <DataGrid ItemsSource="{Binding DanhSachChiSo}" AutoGenerateColumns="False" CanUserAddRows="False"
+                          RowHeight="38" GridLinesVisibility="All" HorizontalGridLinesBrush="#E2E8F0" VerticalGridLinesBrush="#E2E8F0" BorderBrush="#CBD5E1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Phòng" Binding="{Binding MaPhong}" Width="75" IsReadOnly="True" FontWeight="Bold"/>
+                        <DataGridTextColumn Header="Điện Cũ" Binding="{Binding ChiSoDienCu, UpdateSourceTrigger=PropertyChanged}" Width="85"/>
+                        <DataGridTextColumn Header="✏️ Điện Mới" Binding="{Binding ChiSoDienMoi, UpdateSourceTrigger=PropertyChanged}" Width="95" FontWeight="Bold"/>
+                        <DataGridTextColumn Header="Tiêu thụ (kWh)" Binding="{Binding SoDienTieuThu}" Width="105" IsReadOnly="True" Foreground="#2563EB" FontWeight="Bold"/>
+                        <DataGridTextColumn Header="Nước Cũ" Binding="{Binding ChiSoNuocCu, UpdateSourceTrigger=PropertyChanged}" Width="85"/>
+                        <DataGridTextColumn Header="✏️ Nước Mới" Binding="{Binding ChiSoNuocMoi, UpdateSourceTrigger=PropertyChanged}" Width="95" FontWeight="Bold"/>
+                        <DataGridTextColumn Header="Tiêu thụ (m³)" Binding="{Binding SoNuocTieuThu}" Width="*" IsReadOnly="True" Foreground="#10B981" FontWeight="Bold"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <!-- CỘT PHẢI: CẤU HÌNH ĐƠN GIÁ ĐIỆN NƯỚC & DỊCH VỤ PHỤ -->
+        <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="⚙️ Đơn giá Điện, Nước &amp; Dịch vụ" FontSize="17" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,14"/>
+
+                <TextBlock Text="⚡ Đơn giá Điện (VNĐ / kWh)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBox Text="{Binding DonGiaDien}" Height="34" VerticalContentAlignment="Center" Padding="8,0" Margin="0,0,0,12" FontWeight="Bold" Foreground="#2563EB"/>
+
+                <TextBlock Text="💧 Đơn giá Nước (VNĐ / m³)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBox Text="{Binding DonGiaNuoc}" Height="34" VerticalContentAlignment="Center" Padding="8,0" Margin="0,0,0,16" FontWeight="Bold" Foreground="#10B981"/>
+
+                <Separator Background="#E2E8F0" Margin="0,0,0,14"/>
+
+                <TextBlock Text="📦 Bảng giá Dịch vụ phụ (Sửa trực tiếp)" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,6"/>
+                <TextBlock Text="Cách tính: 0 = Theo phòng, 1 = Đầu người, 2 = Số xe" FontSize="11" Foreground="#64748B" Margin="0,0,0,8"/>
+
+                <DataGrid ItemsSource="{Binding DanhSachDichVu}" AutoGenerateColumns="False" CanUserAddRows="False"
+                          Height="180" RowHeight="34" Margin="0,0,0,16" BorderBrush="#CBD5E1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Tên dịch vụ" Binding="{Binding TenDichVu}" Width="*" IsReadOnly="True"/>
+                        <DataGridTextColumn Header="Đơn giá (đ)" Binding="{Binding DonGia, UpdateSourceTrigger=PropertyChanged}" Width="90" FontWeight="SemiBold"/>
+                        <DataGridTextColumn Header="Loại" Binding="{Binding CachTinh}" Width="45" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Button Content="✅ CẬP NHẬT BẢNG ĐƠN GIÁ" Command="{Binding LuuDonGiaDichVuCommand}"
+                        Background="#10B981" Foreground="White" FontWeight="Bold" Height="40" BorderThickness="0" Cursor="Hand"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

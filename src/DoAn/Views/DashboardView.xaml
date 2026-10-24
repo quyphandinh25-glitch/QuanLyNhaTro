@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="DoAn.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F1F5F9">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="24">
+            <TextBlock Text="📊 Tổng quan hệ thống nhà trọ" FontSize="22" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,20"/>
+
+            <!-- Hàng thẻ thống kê trạng thái phòng -->
+            <UniformGrid Columns="4" Margin="0,0,0,24">
+                <!-- Thẻ 1: Tổng số phòng -->
+                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,12,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="TỔNG SỐ PHÒNG" Foreground="#64748B" FontSize="13" FontWeight="SemiBold"/>
+                        <TextBlock Text="{Binding TongSoPhong}" Foreground="#0F172A" FontSize="32" FontWeight="Bold" Margin="0,8,0,4"/>
+                        <TextBlock Text="Toàn bộ 3 tầng" Foreground="#94A3B8" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Thẻ 2: Phòng đang thuê -->
+                <Border Background="#EFF6FF" CornerRadius="10" Padding="20" Margin="6,0,6,0" BorderBrush="#3B82F6" BorderThickness="1.5">
+                    <StackPanel>
+                        <TextBlock Text="🔵 ĐANG CHO THUÊ" Foreground="#1D4ED8" FontSize="13" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding SoPhongDangThue}" Foreground="#1E40AF" FontSize="32" FontWeight="Bold" Margin="0,8,0,4"/>
+                        <TextBlock Text="Hợp đồng đang hiệu lực" Foreground="#3B82F6" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Thẻ 3: Phòng trống -->
+                <Border Background="#ECFDF5" CornerRadius="10" Padding="20" Margin="6,0,6,0" BorderBrush="#10B981" BorderThickness="1.5">
+                    <StackPanel>
+                        <TextBlock Text="🟢 PHÒNG TRỐNG" Foreground="#047857" FontSize="13" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding SoPhongTrong}" Foreground="#065F46" FontSize="32" FontWeight="Bold" Margin="0,8,0,4"/>
+                        <TextBlock Text="Sẵn sàng đón khách mới" Foreground="#10B981" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Thẻ 4: Sắp hết hạn & Bảo trì -->
+                <Border Background="#FFFBEB" CornerRadius="10" Padding="20" Margin="12,0,0,0" BorderBrush="#F59E0B" BorderThickness="1.5">
+                    <StackPanel>
+                        <TextBlock Text="🟠 SẮP HẾT HẠN / BẢO TRÌ" Foreground="#B45309" FontSize="13" FontWeight="Bold"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
+                            <TextBlock Text="{Binding SoPhongSapHetHan}" Foreground="#92400E" FontSize="32" FontWeight="Bold"/>
+                            <TextBlock Text=" / " Foreground="#92400E" FontSize="28" Margin="4,0"/>
+                            <TextBlock Text="{Binding SoPhongBaoTri}" Foreground="#EF4444" FontSize="32" FontWeight="Bold"/>
+                        </StackPanel>
+                        <TextBlock Text="Cần gia hạn hoặc sửa chữa" Foreground="#D97706" FontSize="12"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <!-- Thẻ Doanh thu dự kiến -->
+            <Border Background="White" CornerRadius="10" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
+                <StackPanel>
+                    <TextBlock Text="💰 Tiền phòng dự kiến thu trong tháng (Chưa tính điện nước)" FontSize="16" FontWeight="SemiBold" Foreground="#0F172A"/>
+                    <TextBlock Text="{Binding DoanhThuDuKienThang, StringFormat='{}{0:N0} VNĐ'}" FontSize="28" FontWeight="Bold" Foreground="#2563EB" Margin="0,10,0,0"/>
+                    <TextBlock Text="Số liệu được tổng hợp trực tiếp từ cơ sở dữ liệu SQLite (QuanLyNhaTro.db)." Foreground="#64748B" FontSize="13" Margin="0,8,0,0"/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

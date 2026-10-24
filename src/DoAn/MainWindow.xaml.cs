@@ -1,24 +1,27 @@
-﻿using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using DoAn.Services;
+using DoAn.ViewModels;
+using DoAn.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DoAn
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
+        }
+
+        private void BtnLogout_Click(object sender, RoutedEventArgs e)
+        {
+            var auth = App.ServiceProvider.GetRequiredService<AuthService>();
+            auth.Logout();
+
+            var loginWindow = App.ServiceProvider.GetRequiredService<LoginWindow>();
+            loginWindow.Show();
+            this.Close();
         }
     }
 }

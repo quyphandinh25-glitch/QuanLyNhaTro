@@ -1,0 +1,124 @@
+﻿<UserControl x:Class="DoAn.Views.HoaDonView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F1F5F9">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6.8*"/>
+            <ColumnDefinition Width="3.2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- CỘT TRÁI: DANH SÁCH HÓA ĐƠN THÁNG -->
+        <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="16" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
+            <DockPanel>
+                <!-- Thanh công cụ chọn Tháng/Năm & Phát hành hóa đơn tự động -->
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,14">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="📅 Kỳ Hóa đơn - Tháng:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                        <ComboBox ItemsSource="{Binding DanhSachThang}" SelectedItem="{Binding ThangChon}" Width="65" Height="32" VerticalContentAlignment="Center" Margin="0,0,10,0"/>
+
+                        <TextBlock Text="Năm:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                        <ComboBox ItemsSource="{Binding DanhSachNam}" SelectedItem="{Binding NamChon}" Width="85" Height="32" VerticalContentAlignment="Center" Margin="0,0,12,0"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Button Content="⚡ TÍNH &amp; LẬP HÓA ĐƠN HÀNG LOẠT" Command="{Binding LapHoaDonHangLoatCommand}"
+                                Background="#2563EB" Foreground="White" FontWeight="Bold" Padding="14,0" Height="36" Margin="0,0,8,0" BorderThickness="0" Cursor="Hand"/>
+                        <Button Content="🗑️ Xóa" Command="{Binding XoaHoaDonCommand}"
+                                Background="#EF4444" Foreground="White" FontWeight="Bold" Padding="12,0" Height="36" BorderThickness="0" Cursor="Hand"/>
+                    </StackPanel>
+                </DockPanel>
+
+                <!-- 3 Thẻ tổng hợp nhanh số tiền trong tháng -->
+                <UniformGrid DockPanel.Dock="Top" Columns="3" Margin="0,0,0,14">
+                    <Border Background="#EFF6FF" CornerRadius="8" Padding="12,8" Margin="0,0,6,0" BorderBrush="#BFDBFE" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="TỔNG PHẢI THU" FontSize="11" FontWeight="Bold" Foreground="#1D4ED8"/>
+                            <TextBlock Text="{Binding TongPhaiThuThang, StringFormat='{}{0:N0} đ'}" FontSize="18" FontWeight="Bold" Foreground="#1E40AF"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#ECFDF5" CornerRadius="8" Padding="12,8" Margin="3,0,3,0" BorderBrush="#A7F3D0" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="ĐÃ THU" FontSize="11" FontWeight="Bold" Foreground="#047857"/>
+                            <TextBlock Text="{Binding TongDaThuThang, StringFormat='{}{0:N0} đ'}" FontSize="18" FontWeight="Bold" Foreground="#065F46"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#FEF2F2" CornerRadius="8" Padding="12,8" Margin="6,0,0,0" BorderBrush="#FECACA" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="CÒN NỢ" FontSize="11" FontWeight="Bold" Foreground="#B91C1C"/>
+                            <TextBlock Text="{Binding TongConNoThang, StringFormat='{}{0:N0} đ'}" FontSize="18" FontWeight="Bold" Foreground="#991B1B"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <!-- Bảng danh sách Hóa đơn -->
+                <DataGrid ItemsSource="{Binding DanhSachHoaDon}" SelectedItem="{Binding HoaDonDangChon}"
+                          AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" RowHeight="36"
+                          GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E2E8F0" BorderBrush="#CBD5E1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Phòng" Binding="{Binding Phong.MaPhong}" Width="65" FontWeight="Bold"/>
+                        <DataGridTextColumn Header="Tiền phòng" Binding="{Binding TienPhong, StringFormat='{}{0:N0}'}" Width="90"/>
+                        <DataGridTextColumn Header="Tiền điện" Binding="{Binding TienDien, StringFormat='{}{0:N0}'}" Width="85"/>
+                        <DataGridTextColumn Header="Tiền nước" Binding="{Binding TienNuoc, StringFormat='{}{0:N0}'}" Width="85"/>
+                        <DataGridTextColumn Header="Dịch vụ" Binding="{Binding TienDichVu, StringFormat='{}{0:N0}'}" Width="80"/>
+                        <DataGridTextColumn Header="Tổng cộng" Binding="{Binding TongCong, StringFormat='{}{0:N0}'}" Width="100" FontWeight="Bold" Foreground="#2563EB"/>
+                        <DataGridTextColumn Header="Còn nợ" Binding="{Binding ConNo, StringFormat='{}{0:N0}'}" Width="*" FontWeight="Bold" Foreground="#DC2626"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <!-- CỘT PHẢI: CHI TIẾT PHIẾU BÁO TIỀN TRỌ -->
+        <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="🧾 Chi tiết Phiếu tính tiền" FontSize="18" FontWeight="Bold" Foreground="#0F172A"/>
+                <TextBlock Text="{Binding HoaDonDangChon.MaHoaDon, StringFormat='Mã HĐ: {0}'}" FontSize="13" Foreground="#64748B" Margin="0,4,0,12"/>
+                <Separator Background="#E2E8F0" Margin="0,0,0,12"/>
+
+                <TextBlock Text="{Binding HoaDonDangChon.Phong.TenPhong, StringFormat='🚪 {0}'}" FontSize="18" FontWeight="Bold" Foreground="#2563EB"/>
+                <TextBlock Text="{Binding HoaDonDangChon.HopDong.KhachDaiDien.HoTen, StringFormat='👤 Khách đại diện: {0}'}" FontSize="13" FontWeight="SemiBold" Margin="0,4,0,14"/>
+
+                <Grid Margin="0,0,0,6">
+                    <TextBlock Text="1. Tiền thuê phòng:" Foreground="#334155"/>
+                    <TextBlock Text="{Binding HoaDonDangChon.TienPhong, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                </Grid>
+                <Grid Margin="0,0,0,6">
+                    <TextBlock Text="2. Tiền điện tiêu thụ:" Foreground="#334155"/>
+                    <TextBlock Text="{Binding HoaDonDangChon.TienDien, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                </Grid>
+                <Grid Margin="0,0,0,6">
+                    <TextBlock Text="3. Tiền nước tiêu thụ:" Foreground="#334155"/>
+                    <TextBlock Text="{Binding HoaDonDangChon.TienNuoc, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                </Grid>
+                <Grid Margin="0,0,0,6">
+                    <TextBlock Text="4. Phí dịch vụ (Wifi, rác, xe):" Foreground="#334155"/>
+                    <TextBlock Text="{Binding HoaDonDangChon.TienDichVu, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="SemiBold"/>
+                </Grid>
+                <Grid Margin="0,0,0,12">
+                    <TextBlock Text="5. Nợ cũ kỳ trước:" Foreground="#334155"/>
+                    <TextBlock Text="{Binding HoaDonDangChon.NoCu, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="SemiBold" Foreground="#DC2626"/>
+                </Grid>
+
+                <Separator Background="#CBD5E1" Margin="0,0,0,12"/>
+
+                <Grid Margin="0,0,0,8">
+                    <TextBlock Text="TỔNG CỘNG PHẢI THU:" FontWeight="Bold" FontSize="14"/>
+                    <TextBlock Text="{Binding HoaDonDangChon.TongCong, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="16" Foreground="#2563EB"/>
+                </Grid>
+                <Grid Margin="0,0,0,8">
+                    <TextBlock Text="Đã thanh toán:" Foreground="#047857" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding HoaDonDangChon.SoTienDaDong, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#047857"/>
+                </Grid>
+                <Grid Margin="0,0,0,16">
+                    <TextBlock Text="CÒN NỢ LẠI:" Foreground="#DC2626" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding HoaDonDangChon.ConNo, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="15" Foreground="#DC2626"/>
+                </Grid>
+
+                <Border Background="#F8FAFC" CornerRadius="8" Padding="12" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <TextBlock Text="📌 Phần Thu tiền (thanh toán đủ / một phần) và Xuất phiếu PDF sẽ được nối tiếp ngay ở mục sau của Giai đoạn 6."
+                               FontSize="12" Foreground="#64748B" TextWrapping="Wrap"/>
+                </Border>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
