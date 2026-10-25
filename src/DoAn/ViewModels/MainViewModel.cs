@@ -58,7 +58,8 @@ namespace DoAn.ViewModels
                     CurrentView = App.ServiceProvider.GetRequiredService<HoaDonViewModel>();
                     break;
                 case "SuCo":
-                    TieuDeManHinh = "🛠️ Quản lý Sự cố & Bảo trì (Sẽ code ở GĐ 7)";
+                    TieuDeManHinh = "🛠️ Quản lý Sự cố & Bảo trì phòng";
+                    CurrentView = App.ServiceProvider.GetRequiredService<SuCoViewModel>();
                     break;
             }
         }

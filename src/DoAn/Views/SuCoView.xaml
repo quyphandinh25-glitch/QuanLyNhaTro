@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="DoAn.Views.SuCoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="#F1F5F9">
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="6.5*"/>
+            <ColumnDefinition Width="3.5*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- CỘT TRÁI: DANH SÁCH SỰ CỐ & THỐNG KÊ CHI PHÍ -->
+        <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="16" Margin="0,0,16,0" BorderBrush="#E2E8F0" BorderThickness="1">
+            <DockPanel>
+                <!-- Thanh lọc & nút Hoàn tất nhanh -->
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,14">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="🔍 Trạng thái:" VerticalAlignment="Center" FontWeight="SemiBold" Margin="0,0,8,0"/>
+                        <ComboBox ItemsSource="{Binding DanhSachLocTrangThai}" SelectedItem="{Binding LocTrangThaiChon}" Width="190" Height="32" VerticalContentAlignment="Center"/>
+                    </StackPanel>
+
+                    <Button Content="✅ Đánh dấu Đã sửa xong &amp; Mở lại phòng" Command="{Binding HoanTatSuaChuaCommand}"
+                            HorizontalAlignment="Right" Background="#10B981" Foreground="White" FontWeight="Bold"
+                            Padding="14,0" Height="34" BorderThickness="0" Cursor="Hand"/>
+                </DockPanel>
+
+                <!-- 2 Thẻ tóm tắt tình hình bảo trì -->
+                <UniformGrid DockPanel.Dock="Top" Columns="2" Margin="0,0,0,14">
+                    <Border Background="#FEF2F2" CornerRadius="8" Padding="12,8" Margin="0,0,6,0" BorderBrush="#FECACA" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="SỰ CỐ ĐANG XỬ LÝ" FontSize="11" FontWeight="Bold" Foreground="#B91C1C"/>
+                            <TextBlock Text="{Binding SoSuCoDangXuLy, StringFormat='{}{0} sự cố cần sửa'}" FontSize="17" FontWeight="Bold" Foreground="#991B1B"/>
+                        </StackPanel>
+                    </Border>
+                    <Border Background="#FFFBEB" CornerRadius="8" Padding="12,8" Margin="6,0,0,0" BorderBrush="#FDE68A" BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="TỔNG CHI PHÍ SỬA CHỮA" FontSize="11" FontWeight="Bold" Foreground="#B45309"/>
+                            <TextBlock Text="{Binding TongChiPhiSuaChua, StringFormat='{}{0:N0} VNĐ'}" FontSize="17" FontWeight="Bold" Foreground="#92400E"/>
+                        </StackPanel>
+                    </Border>
+                </UniformGrid>
+
+                <!-- Bảng danh sách sự cố -->
+                <DataGrid ItemsSource="{Binding DanhSachSuCo}" SelectedItem="{Binding SuCoDangChon}"
+                          AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" RowHeight="36"
+                          GridLinesVisibility="Horizontal" HorizontalGridLinesBrush="#E2E8F0" BorderBrush="#CBD5E1">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Phòng" Binding="{Binding Phong.MaPhong}" Width="65" FontWeight="Bold"/>
+                        <DataGridTextColumn Header="Tiêu đề sự cố" Binding="{Binding TieuDe}" Width="170" FontWeight="SemiBold"/>
+                        <DataGridTextColumn Header="Ngày báo" Binding="{Binding NgayBao, StringFormat='{}{0:dd/MM/yyyy}'}" Width="90"/>
+                        <DataGridTextColumn Header="Chi phí (đ)" Binding="{Binding ChiPhiSuaChua, StringFormat='{}{0:N0}'}" Width="100" Foreground="#DC2626" FontWeight="Bold"/>
+                        <DataGridTextColumn Header="TT (0:Mới, 1:Đang sửa, 2:Xong)" Binding="{Binding TrangThai}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Border>
+
+        <!-- CỘT PHẢI: BIỂU MẪU GHI NHẬN SỰ CỐ -->
+        <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="20" BorderBrush="#E2E8F0" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="🛠️ Ghi nhận Sự cố &amp; Bảo trì" FontSize="18" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,16"/>
+
+                <TextBlock Text="Chọn Phòng gặp sự cố (*)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <ComboBox ItemsSource="{Binding DanhSachPhong}" SelectedItem="{Binding PhongChon}"
+                          DisplayMemberPath="TenPhong" Height="32" VerticalContentAlignment="Center" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Tiêu đề hư hỏng (*)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBox Text="{Binding TieuDe}" Height="32" VerticalContentAlignment="Center" Padding="8,0" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Mô tả chi tiết" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBox Text="{Binding MoTaChiTiet}" Height="64" TextWrapping="Wrap" AcceptsReturn="True" Padding="8,6" Margin="0,0,0,10"/>
+
+                <TextBlock Text="Chi phí sửa chữa (VNĐ)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBox Text="{Binding ChiPhiSuaChua}" Height="32" VerticalContentAlignment="Center" Padding="8,0" Margin="0,0,0,10" FontWeight="Bold" Foreground="#DC2626"/>
+
+                <TextBlock Text="Trạng thái (0:Mới, 1:Đang sửa, 2:Hoàn thành)" FontWeight="SemiBold" Margin="0,0,0,4"/>
+                <TextBox Text="{Binding TrangThai}" Height="32" VerticalContentAlignment="Center" Padding="8,0" Margin="0,0,0,12"/>
+
+                <CheckBox IsChecked="{Binding ChuyenPhongSangBaoTri}" Content="Chuyển phòng sang trạng thái Đang bảo trì"
+                          FontWeight="SemiBold" Foreground="#B91C1C" Margin="0,0,0,16"/>
+
+                <UniformGrid Columns="2">
+                    <Button Content="➕ Báo sự cố" Command="{Binding ThemSuCoCommand}" Background="#2563EB" Foreground="White" FontWeight="Bold" Height="36" Margin="0,0,4,8" BorderThickness="0"/>
+                    <Button Content="✏️ Cập nhật" Command="{Binding CapNhatSuCoCommand}" Background="#F59E0B" Foreground="White" FontWeight="Bold" Height="36" Margin="4,0,0,8" BorderThickness="0"/>
+                    <Button Content="🗑️ Xóa" Command="{Binding XoaSuCoCommand}" Background="#EF4444" Foreground="White" FontWeight="Bold" Height="36" Margin="0,0,4,0" BorderThickness="0"/>
+                    <Button Content="🔄 Làm mới" Command="{Binding LamMoiCommand}" Background="#64748B" Foreground="White" FontWeight="Bold" Height="36" Margin="4,0,0,0" BorderThickness="0"/>
+                </UniformGrid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

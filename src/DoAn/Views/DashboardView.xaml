@@ -4,59 +4,133 @@
              Background="#F1F5F9">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="24">
-            <TextBlock Text="📊 Tổng quan hệ thống nhà trọ" FontSize="22" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,20"/>
+            <!-- Thanh tiêu đề + Nút Xuất Excel & Sao lưu CSDL -->
+            <DockPanel Margin="0,0,0,20">
+                <StackPanel>
+                    <TextBlock Text="📊 Tổng quan hệ thống &amp; Báo cáo tài chính" FontSize="22" FontWeight="Bold" Foreground="#0F172A"/>
+                    <TextBlock Text="{Binding TrangThaiTaiDuLieu}" FontSize="12" Foreground="#64748B" Margin="0,4,0,0"/>
+                </StackPanel>
 
-            <!-- Hàng thẻ thống kê trạng thái phòng -->
-            <UniformGrid Columns="4" Margin="0,0,0,24">
-                <!-- Thẻ 1: Tổng số phòng -->
-                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,12,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Button Content="🔄 Làm mới" Command="{Binding TaiThongKeCommand}"
+                            Background="#64748B" Foreground="White" FontWeight="Bold" Padding="12,8" Margin="0,0,8,0" BorderThickness="0" Cursor="Hand"/>
+                    <Button Content="📥 Xuất Báo cáo Excel" Command="{Binding XuatBaoCaoExcelCommand}"
+                            Background="#10B981" Foreground="White" FontWeight="Bold" Padding="14,8" Margin="0,0,8,0" BorderThickness="0" Cursor="Hand"/>
+                    <Button Content="💾 Sao lưu CSDL (.db)" Command="{Binding SaoLuuDatabaseCommand}"
+                            Background="#2563EB" Foreground="White" FontWeight="Bold" Padding="14,8" BorderThickness="0" Cursor="Hand"/>
+                </StackPanel>
+            </DockPanel>
+
+            <!-- Hàng 1: 4 Thẻ thống kê trạng thái phòng -->
+            <UniformGrid Columns="4" Margin="0,0,0,20">
+                <Border Background="White" CornerRadius="10" Padding="18" Margin="0,0,10,0" BorderBrush="#E2E8F0" BorderThickness="1">
                     <StackPanel>
-                        <TextBlock Text="TỔNG SỐ PHÒNG" Foreground="#64748B" FontSize="13" FontWeight="SemiBold"/>
-                        <TextBlock Text="{Binding TongSoPhong}" Foreground="#0F172A" FontSize="32" FontWeight="Bold" Margin="0,8,0,4"/>
-                        <TextBlock Text="Toàn bộ 3 tầng" Foreground="#94A3B8" FontSize="12"/>
+                        <TextBlock Text="TỔNG SỐ PHÒNG" Foreground="#64748B" FontSize="12" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding TongSoPhong}" Foreground="#0F172A" FontSize="30" FontWeight="Bold" Margin="0,6,0,4"/>
+                        <TextBlock Text="Quy mô toàn nhà trọ" Foreground="#94A3B8" FontSize="12"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Thẻ 2: Phòng đang thuê -->
-                <Border Background="#EFF6FF" CornerRadius="10" Padding="20" Margin="6,0,6,0" BorderBrush="#3B82F6" BorderThickness="1.5">
+                <Border Background="#EFF6FF" CornerRadius="10" Padding="18" Margin="5,0,5,0" BorderBrush="#3B82F6" BorderThickness="1.5">
                     <StackPanel>
-                        <TextBlock Text="🔵 ĐANG CHO THUÊ" Foreground="#1D4ED8" FontSize="13" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding SoPhongDangThue}" Foreground="#1E40AF" FontSize="32" FontWeight="Bold" Margin="0,8,0,4"/>
+                        <TextBlock Text="🔵 ĐANG CHO THUÊ" Foreground="#1D4ED8" FontSize="12" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding SoPhongDangThue}" Foreground="#1E40AF" FontSize="30" FontWeight="Bold" Margin="0,6,0,4"/>
                         <TextBlock Text="Hợp đồng đang hiệu lực" Foreground="#3B82F6" FontSize="12"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Thẻ 3: Phòng trống -->
-                <Border Background="#ECFDF5" CornerRadius="10" Padding="20" Margin="6,0,6,0" BorderBrush="#10B981" BorderThickness="1.5">
+                <Border Background="#ECFDF5" CornerRadius="10" Padding="18" Margin="5,0,5,0" BorderBrush="#10B981" BorderThickness="1.5">
                     <StackPanel>
-                        <TextBlock Text="🟢 PHÒNG TRỐNG" Foreground="#047857" FontSize="13" FontWeight="Bold"/>
-                        <TextBlock Text="{Binding SoPhongTrong}" Foreground="#065F46" FontSize="32" FontWeight="Bold" Margin="0,8,0,4"/>
-                        <TextBlock Text="Sẵn sàng đón khách mới" Foreground="#10B981" FontSize="12"/>
+                        <TextBlock Text="🟢 PHÒNG TRỐNG" Foreground="#047857" FontSize="12" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding SoPhongTrong}" Foreground="#065F46" FontSize="30" FontWeight="Bold" Margin="0,6,0,4"/>
+                        <TextBlock Text="Sẵn sàng đón khách" Foreground="#10B981" FontSize="12"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Thẻ 4: Sắp hết hạn & Bảo trì -->
-                <Border Background="#FFFBEB" CornerRadius="10" Padding="20" Margin="12,0,0,0" BorderBrush="#F59E0B" BorderThickness="1.5">
+                <Border Background="#FFFBEB" CornerRadius="10" Padding="18" Margin="10,0,0,0" BorderBrush="#F59E0B" BorderThickness="1.5">
                     <StackPanel>
-                        <TextBlock Text="🟠 SẮP HẾT HẠN / BẢO TRÌ" Foreground="#B45309" FontSize="13" FontWeight="Bold"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,8,0,4">
-                            <TextBlock Text="{Binding SoPhongSapHetHan}" Foreground="#92400E" FontSize="32" FontWeight="Bold"/>
-                            <TextBlock Text=" / " Foreground="#92400E" FontSize="28" Margin="4,0"/>
-                            <TextBlock Text="{Binding SoPhongBaoTri}" Foreground="#EF4444" FontSize="32" FontWeight="Bold"/>
+                        <TextBlock Text="🟠 SẮP HẾT / 🔴 BẢO TRÌ" Foreground="#B45309" FontSize="12" FontWeight="Bold"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,6,0,4">
+                            <TextBlock Text="{Binding SoPhongSapHetHan}" Foreground="#92400E" FontSize="30" FontWeight="Bold"/>
+                            <TextBlock Text=" / " Foreground="#92400E" FontSize="26" Margin="4,0"/>
+                            <TextBlock Text="{Binding SoPhongBaoTri}" Foreground="#EF4444" FontSize="30" FontWeight="Bold"/>
                         </StackPanel>
                         <TextBlock Text="Cần gia hạn hoặc sửa chữa" Foreground="#D97706" FontSize="12"/>
                     </StackPanel>
                 </Border>
             </UniformGrid>
 
-            <!-- Thẻ Doanh thu dự kiến -->
-            <Border Background="White" CornerRadius="10" Padding="24" BorderBrush="#E2E8F0" BorderThickness="1">
-                <StackPanel>
-                    <TextBlock Text="💰 Tiền phòng dự kiến thu trong tháng (Chưa tính điện nước)" FontSize="16" FontWeight="SemiBold" Foreground="#0F172A"/>
-                    <TextBlock Text="{Binding DoanhThuDuKienThang, StringFormat='{}{0:N0} VNĐ'}" FontSize="28" FontWeight="Bold" Foreground="#2563EB" Margin="0,10,0,0"/>
-                    <TextBlock Text="Số liệu được tổng hợp trực tiếp từ cơ sở dữ liệu SQLite (QuanLyNhaTro.db)." Foreground="#64748B" FontSize="13" Margin="0,8,0,0"/>
-                </StackPanel>
-            </Border>
+            <!-- Hàng 2: Thống kê Tài chính & Biểu đồ Đồ họa WPF -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"/>
+                    <ColumnDefinition Width="5*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Cột trái: Các chỉ số Doanh thu, Công nợ, Chi phí & Lợi nhuận -->
+                <Border Grid.Column="0" Background="White" CornerRadius="10" Padding="20" Margin="0,0,10,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="💰 Tổng hợp Tài chính &amp; Lợi nhuận" FontSize="16" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,14"/>
+
+                        <Grid Margin="0,0,0,10">
+                            <TextBlock Text="• Tiền phòng dự kiến / tháng:" Foreground="#475569" FontSize="14"/>
+                            <TextBlock Text="{Binding DoanhThuDuKienThang, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="14" Foreground="#2563EB"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,10">
+                            <TextBlock Text="• Tổng thực thu (Hóa đơn đã đóng):" Foreground="#475569" FontSize="14"/>
+                            <TextBlock Text="{Binding TongDaThuThucTe, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="14" Foreground="#10B981"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,10">
+                            <TextBlock Text="• Tổng công nợ khách còn thiếu:" Foreground="#475569" FontSize="14"/>
+                            <TextBlock Text="{Binding TongCongNoChuaThu, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="14" Foreground="#EF4444"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,14">
+                            <TextBlock Text="• Chi phí sửa chữa / bảo trì:" Foreground="#475569" FontSize="14"/>
+                            <TextBlock Text="{Binding TongChiPhiBaoTri, StringFormat='-{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="14" Foreground="#F59E0B"/>
+                        </Grid>
+
+                        <Separator Background="#E2E8F0" Margin="0,0,0,12"/>
+                        <Grid>
+                            <TextBlock Text="LỢI NHUẬN RÒNG THỰC TẾ:" FontWeight="Bold" FontSize="15" Foreground="#0F172A" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding LoiNhuanRong, StringFormat='{}{0:N0} VNĐ'}" HorizontalAlignment="Right" FontWeight="Bold" FontSize="20" Foreground="#1D4ED8"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Cột phải: Biểu đồ Đồ họa trực quan (WPF Shapes & Progress Bars) -->
+                <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="20" Margin="10,0,0,0" BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="📈 Biểu đồ Hiệu suất Khai thác &amp; Thu phí" FontSize="16" FontWeight="Bold" Foreground="#0F172A" Margin="0,0,0,14"/>
+
+                        <!-- Thanh đồ họa 1: Tỷ lệ lấp đầy phòng -->
+                        <DockPanel Margin="0,0,0,6">
+                            <TextBlock Text="1. Tỷ lệ lấp đầy phòng trọ:" FontWeight="SemiBold" Foreground="#334155"/>
+                            <TextBlock Text="{Binding TyLeLapDayPhanTram, StringFormat='{}{0}%'}" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#2563EB"/>
+                        </DockPanel>
+                        <Border Background="#E2E8F0" Height="18" CornerRadius="9" Width="360" HorizontalAlignment="Left" Margin="0,0,0,16">
+                            <Border Background="#2563EB" Height="18" CornerRadius="9" Width="{Binding DoRongThanhLapDay}" HorizontalAlignment="Left"/>
+                        </Border>
+
+                        <!-- Thanh đồ họa 2: Tỷ lệ Thực thu Hóa đơn -->
+                        <DockPanel Margin="0,0,0,6">
+                            <TextBlock Text="2. Tỷ lệ Hóa đơn đã thu tiền:" FontWeight="SemiBold" Foreground="#334155"/>
+                            <TextBlock Text="{Binding TongDaThuThucTe, StringFormat='{}{0:N0} đ'}" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#10B981"/>
+                        </DockPanel>
+                        <Border Background="#E2E8F0" Height="18" CornerRadius="9" Width="360" HorizontalAlignment="Left" Margin="0,0,0,16">
+                            <Border Background="#10B981" Height="18" CornerRadius="9" Width="{Binding DoRongThanhDaThu}" HorizontalAlignment="Left"/>
+                        </Border>
+
+                        <!-- Thanh đồ họa 3: Tỷ lệ Công nợ tồn đọng -->
+                        <DockPanel Margin="0,0,0,6">
+                            <TextBlock Text="3. Tỷ lệ Công nợ chưa thu:" FontWeight="SemiBold" Foreground="#334155"/>
+                            <TextBlock Text="{Binding TongCongNoChuaThu, StringFormat='{}{0:N0} đ'}" HorizontalAlignment="Right" FontWeight="Bold" Foreground="#EF4444"/>
+                        </DockPanel>
+                        <Border Background="#E2E8F0" Height="18" CornerRadius="9" Width="360" HorizontalAlignment="Left">
+                            <Border Background="#EF4444" Height="18" CornerRadius="9" Width="{Binding DoRongThanhCongNo}" HorizontalAlignment="Left"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>

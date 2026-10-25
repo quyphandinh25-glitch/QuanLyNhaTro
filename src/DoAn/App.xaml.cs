@@ -40,6 +40,7 @@ namespace DoAn
             services.AddTransient<SoDoPhongViewModel>();
             services.AddTransient<DienNuocViewModel>();
             services.AddTransient<HoaDonViewModel>();
+            services.AddTransient<SuCoViewModel>();
         }
 
         protected override void OnStartup(StartupEventArgs e)

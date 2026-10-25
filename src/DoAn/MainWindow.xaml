@@ -30,6 +30,9 @@
         <DataTemplate DataType="{x:Type vm:HoaDonViewModel}">
             <views:HoaDonView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type vm:SuCoViewModel}">
+            <views:SuCoView/>
+        </DataTemplate>
         <!-- Style dùng chung cho các nút trên thanh Sidebar (Dòng 27) -->
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
