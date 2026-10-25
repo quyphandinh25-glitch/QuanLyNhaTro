@@ -140,41 +140,41 @@ QuanLyNhaTro/
 └── src/
     ├── QuanLyNhaTro.sln                  # Solution quản lý dự án (.NET 10)
     └── DoAn/                             # Project WPF chính
-        ├── Configurations/               # Cấu hình mở rộng
-        ├── Converters/                   # Bộ chuyển đổi dữ liệu hiển thị UI
+        ├── Configurations/               # Cấu hình hệ thống mở rộng
+        ├── Converters/                   # Bộ chuyển đổi dữ liệu hiển thị XAML (ValueConverters)
         ├── Data/
-        │   ├── AppDbContext.cs           # Kết nối EF Core SQLite & Khởi tạo CSDL
+        │   ├── AppDbContext.cs           # Kết nối EF Core SQLite & Khởi tạo cấu trúc bảng
         │   └── DbSeeder.cs               # Tự động nạp dữ liệu mẫu Nhà Trọ 8386 Bình Định
         ├── Helpers/
-        │   └── PasswordHelper.cs         # Thuật toán mã hóa mật khẩu SHA-256
+        │   └── PasswordHelper.cs         # Thuật toán mã hóa băm mật khẩu chuẩn SHA-256
         ├── Models/
         │   └── Entities.cs               # Định nghĩa 10 thực thể CSDL (Phong, HopDong, HoaDon...)
-        ├── Repositories/                 # Tầng giao tiếp dữ liệu
+        ├── Repositories/                 # Tầng giao tiếp truy xuất dữ liệu
         ├── Services/
-        │   └── AuthService.cs            # Quản lý xác thực và phiên đăng nhập
-        ├── ViewModels/                   # Tầng nghiệp vụ MVVM (9 ViewModels)
-        │   ├── MainViewModel.cs
-        │   ├── DashboardViewModel.cs
-        │   ├── SoDoPhongViewModel.cs
-        │   ├── PhongViewModel.cs
-        │   ├── KhachThueViewModel.cs
-        │   ├── HopDongViewModel.cs
-        │   ├── DienNuocViewModel.cs
-        │   ├── HoaDonViewModel.cs
-        │   └── SuCoViewModel.cs
-        ├── Views/                        # Tầng giao diện XAML & Hiệu ứng
-        │   ├── LoginWindow.xaml
-        │   ├── DashboardView.xaml
-        │   ├── SoDoPhongView.xaml
-        │   ├── PhongView.xaml
-        │   ├── KhachThueView.xaml
-        │   ├── HopDongView.xaml
-        │   ├── DienNuocView.xaml
-        │   ├── HoaDonView.xaml
-        │   ├── PreviewHoaDonWindow.xaml
-        │   └── SuCoView.xaml
+        │   └── AuthService.cs            # Quản lý xác thực và phiên đăng nhập người dùng
+        ├── ViewModels/                   # Tầng xử lý logic nghiệp vụ chuẩn MVVM (9 ViewModels)
+        │   ├── MainViewModel.cs          # Điều hướng màn hình trung tâm & trạng thái phiên làm việc
+        │   ├── DashboardViewModel.cs     # Thống kê đa luồng, xuất báo cáo Excel & sao lưu CSDL
+        │   ├── SoDoPhongViewModel.cs     # Logic sơ đồ phòng trực quan, bộ lọc & thao tác nhanh
+        │   ├── PhongViewModel.cs         # Nghiệp vụ thêm, sửa, xóa, tìm kiếm phòng & loại phòng
+        │   ├── KhachThueViewModel.cs     # Quản lý hồ sơ khách thuê & kiểm tra ràng buộc dữ liệu
+        │   ├── HopDongViewModel.cs       # Quản lý ký hợp đồng mới, gia hạn & thanh lý hoàn cọc
+        │   ├── DienNuocViewModel.cs      # Chốt chỉ số điện nước kế thừa & cấu hình đơn giá dịch vụ
+        │   ├── HoaDonViewModel.cs        # Tính hóa đơn hàng loạt, thu tiền công nợ & tạo bản in PDF
+        │   └── SuCoViewModel.cs          # Quản lý tiến độ xử lý sự cố & đồng bộ trạng thái bảo trì
+        ├── Views/                        # Tầng giao diện người dùng XAML & Hiệu ứng chuyển động
+        │   ├── LoginWindow.xaml          # Màn hình đăng nhập hệ thống
+        │   ├── DashboardView.xaml        # Giao diện bảng điều khiển tổng quan & biểu đồ hiệu suất
+        │   ├── SoDoPhongView.xaml        # Giao diện lưới thẻ phòng đổi màu tự động & hiệu ứng nổi 3D
+        │   ├── PhongView.xaml            # Giao diện quản lý danh mục phòng trọ
+        │   ├── KhachThueView.xaml        # Giao diện quản lý hồ sơ khách thuê
+        │   ├── HopDongView.xaml          # Giao diện quản lý vòng đời hợp đồng thuê
+        │   ├── DienNuocView.xaml         # Giao diện nhập chỉ số điện nước & bảng giá dịch vụ
+        │   ├── HoaDonView.xaml           # Giao diện phát hành hóa đơn, lọc nợ & ghi nhận thanh toán
+        │   ├── PreviewHoaDonWindow.xaml  # Cửa sổ xem trước phiếu báo tiền trọ & xuất file PDF
+        │   └── SuCoView.xaml             # Giao diện tiếp nhận & cập nhật trạng thái sửa chữa sự cố
         ├── App.xaml / App.xaml.cs        # Khai báo DI Container & Global Animation Styles
-        └── MainWindow.xaml               # Khung điều hướng chính (Sidebar + ContentControl)
+        └── MainWindow.xaml               # Khung điều hướng chính (Sidebar + Header + ContentControl)
 ```
 
 ---
@@ -186,7 +186,7 @@ QuanLyNhaTro/
 * **Yêu cầu:** Windows 10/11, **Visual Studio 2022 / 2026** (workload *.NET Desktop Development*), **.NET 10.0 SDK**.
 * **Thao tác trên Terminal:**
   ```bash
-  git clone https://github.com/quyphandinh25-glitch/QuanLyNhaTro.git
+  git clone [https://github.com/quyphandinh25-glitch/QuanLyNhaTro.git](https://github.com/quyphandinh25-glitch/QuanLyNhaTro.git)
   cd QuanLyNhaTro
   start src/QuanLyNhaTro.sln
   ```
