@@ -10,19 +10,20 @@
 [![UI/UX](https://img.shields.io/badge/UI%20Animation-CubicEase%20%26%203D%20Shadow-2563EB?style=flat-square)](#)
 
 <p align="center">
-  <b><a href="#-tổng-quan--điểm-nhấn-công-nghệ">Điểm nhấn</a></b> •
-  <b><a href="#-luồng-vận-hành-khép-kín">Luồng nghiệp vụ</a></b> •
-  <b><a href="#-chi-tiết-các-phân-hệ-chức-năng">Phân hệ chức năng</a></b> •
-  <b><a href="#-công-thức--quy-tắc-tính-toán">Công thức tính</a></b> •
-  <b><a href="#-kiến-trúc-mã-nguồn">Cấu trúc dự án</a></b> •
-  <b><a href="#-hướng-dẫn-triển-khai">Khởi chạy nhanh</a></b>
+  <b><a href="#diem-nhan">Điểm nhấn</a></b> •
+  <b><a href="#luong-nghiep-vu">Luồng nghiệp vụ</a></b> •
+  <b><a href="#phan-he-chuc-nang">Phân hệ chức năng</a></b> •
+  <b><a href="#cong-thuc-tinh">Công thức tính</a></b> •
+  <b><a href="#cau-truc-du-an">Cấu trúc dự án</a></b> •
+  <b><a href="#khoi-chay-nhanh">Khởi chạy nhanh</a></b>
 </p>
 
 </div>
 
 ---
 
-## 🌟 Tổng Quan & Điểm Nhấn Công Nghệ
+<a id="diem-nhan"></a>
+## 🌟 1. Tổng Quan & Điểm Nhấn Công Nghệ
 
 **Nhà Trọ 8386 Bình Định** là phần mềm Desktop chuyên dụng giúp chủ nhà trọ số hóa toàn diện quy trình quản lý từ khâu đón khách, ký hợp đồng, ghi chỉ số điện nước đến phát hành hóa đơn và thống kê lợi nhuận. Thay vì sử dụng các bảng biểu truyền thống khô khan, hệ thống tập trung vào trải nghiệm tương tác thị giác và tự động hóa số liệu:
 
@@ -40,7 +41,8 @@
 
 ---
 
-## 🔄 Luồng Vận Hành Khép Kín
+<a id="luong-nghiep-vu"></a>
+## 🔄 2. Luồng Vận Hành Khép Kín
 
 ```text
 ┌───────────────────┐     ┌───────────────────┐     ┌───────────────────┐
@@ -53,3 +55,150 @@
 │ Xuất Excel/Backup │     │ Trả góp / In phiếu│     │ 4. LẬP HÓA ĐƠN    │
 └───────────────────┘     └───────────────────┘     │ Tính tiền tự động │
                                                     └───────────────────┘
+```
+
+---
+
+<a id="phan-he-chuc-nang"></a>
+## 🧩 3. Chi Tiết Các Phân Hệ Chức Năng
+
+### Ⅰ. Không Gian & Lưu Trú (Space & Tenancy Management)
+
+* **🗺️ Sơ đồ phòng trực quan (Core UI):**
+  * Hiển thị thẻ phòng thông minh với 4 mã màu trạng thái tự động: 🟢 **Phòng trống**, 🔵 **Đang thuê**, 🟠 **Sắp hết hạn** (cảnh báo khi hợp đồng còn $\le 15$ ngày) và 🔴 **Đang bảo trì**.
+  * Bộ lọc đa chiều theo Tầng, Trạng thái, Từ khóa tìm kiếm kèm bộ đếm số lượng theo thời gian thực.
+  * **Panel Thao tác nhanh:** Thực hiện ngay các nghiệp vụ *Cho thuê nhanh (1 năm)*, *Gia hạn nhanh (+6 tháng)*, *Quyết toán trả phòng* hoặc *Báo bảo trì / Mở lại phòng* ngay tại sơ đồ mà không cần chuyển tab.
+* **🚪 Quản lý Danh mục Phòng & Khách thuê:**
+  * Phân loại phòng (*Phòng đơn, Phòng có gác, Studio*), thiết lập diện tích và đơn giá niêm yết.
+  * Quản lý hồ sơ khách thuê (CCCD, SĐT, Quê quán) và kiểm tra ràng buộc toàn vẹn dữ liệu trước khi xóa.
+* **📄 Quản lý Vòng đời Hợp đồng:**
+  * Tự động điền giá phòng và tiền cọc gợi ý khi lập hợp đồng mới; quản lý số lượng người ở và số xe máy để làm cơ sở tính phí dịch vụ.
+  * **Thanh lý & Quyết toán cọc:** Tự động đối trừ tổng công nợ hóa đơn chưa thanh toán vào tiền đặt cọc và giải phóng phòng về trạng thái trống.
+
+### Ⅱ. Tài Chính, Công Nợ & In Ấn (Billing & Invoicing Engine)
+
+* **⚡ Chốt Chỉ số Điện Nước & Dịch vụ phụ:**
+  * Tự động lấy **Chỉ số mới** của tháng trước gán làm **Chỉ số cũ** cho kỳ chốt hiện tại.
+  * Cho phép nhập nhanh trực tiếp trên lưới `DataGrid`, kiểm tra điều kiện $\text{Chỉ số mới} \ge \text{Chỉ số cũ}$ và bật cảnh báo nếu tiêu thụ vượt ngưỡng bất thường ($> 500\text{ kWh}$ điện hoặc $> 50\text{ m}^3$ nước).
+  * Thiết lập linh hoạt đơn giá Điện, Nước và 3 hình thức tính phí dịch vụ (*Wifi, Rác, Gửi xe*): tính theo phòng, theo đầu người hoặc theo số lượng xe.
+* **🧾 Phát hành Hóa đơn, Thu nợ & Xuất PDF:**
+  * **Lập hóa đơn hàng loạt:** Chỉ với 1 nút bấm, hệ thống quét toàn bộ hợp đồng đang hiệu lực để tổng hợp *Tiền phòng + Tiền điện + Tiền nước + Phí dịch vụ + Nợ cũ kỳ trước*.
+  * **Quản lý thu tiền linh hoạt:** Hỗ trợ khách đóng đủ 1 lần hoặc đóng trước một phần (ghi nhận công nợ còn lại), lưu vết lịch sử giao dịch (`ThanhToans`) và lọc nhanh các phòng đang nợ.
+  * **Xem trước & Xuất PDF:** Dựng bản in phiếu báo tiền trọ chuẩn chỉnh bằng `FlowDocument` kèm thanh công cụ xuất trực tiếp ra file **PDF**.
+
+### Ⅲ. Kỹ Thuật, Thống Kê & Quản Trị (Maintenance & Analytics)
+
+* **🛠️ Quản lý Sự cố & Bảo trì:**
+  * Ghi nhận hư hỏng theo phòng, theo dõi tiến độ (*Mới tiếp nhận ➔ Đang sửa chữa ➔ Đã hoàn thành*) và tổng hợp chi phí sửa chữa.
+  * Tự động đồng bộ trạng thái phòng sang *Đang bảo trì* khi có sự cố và tự động khôi phục trạng thái phòng khi hoàn tất sửa chữa.
+* **📊 Dashboard Đa luồng, Xuất Excel & Sao lưu CSDL:**
+  * Tính toán bất đồng bộ (`async/await`) các chỉ số: Doanh thu dự kiến, Thực thu, Công nợ tồn đọng, Chi phí bảo trì và Lợi nhuận ròng.
+  * Biểu đồ thanh đồ họa WPF trực quan hóa tỷ lệ lấp đầy phòng và hiệu suất thu tiền.
+  * Xuất bảng kê doanh thu ra file **Excel (`.csv`)** hiển thị chuẩn tiếng Việt và sao lưu nóng file **`QuanLyNhaTro.db`** ra máy tính.
+
+---
+
+<a id="cong-thuc-tinh"></a>
+## 🧮 4. Công Thức & Quy Tắc Tính Toán
+
+Hệ thống áp dụng 4 công thức chuẩn hóa tự động hoàn toàn trong tầng `ViewModel`:
+
+1. **Tiền phòng tháng đầu tiên (Áp dụng khi khách dọn vào sau ngày 05 của tháng):**
+   $$\text{Tiền phòng} = \text{Round}\left(\frac{\text{Giá thuê chốt}}{30} \times (30 - \text{Ngày vào} + 1)\right)$$
+
+2. **Chi phí dịch vụ phụ hàng tháng:**
+   $$\text{Tiền dịch vụ} = \sum \text{DV theo phòng} + (\text{DV đầu người} \times \text{Số người}) + (\text{DV gửi xe} \times \text{Số xe})$$
+
+3. **Tổng cộng Hóa đơn phải thu:**
+   $$\text{Tổng phải thu} = \text{Tiền phòng} + (\Delta \text{Điện} \times \text{Giá điện}) + (\Delta \text{Nước} \times \text{Giá nước}) + \text{Tiền dịch vụ} + \text{Nợ cũ}$$
+
+4. **Quyết toán tiền hoàn cọc khi thanh lý hợp đồng:**
+   $$\text{Tiền hoàn cọc} = \text{Tiền đặt cọc} - \sum \text{Công nợ hóa đơn chưa đóng}$$
+
+---
+
+<a id="cau-truc-du-an"></a>
+## 🏗️ 5. Kiến Trúc Mã Nguồn & Cấu Trúc Dự Án
+
+### Bảng Công Nghệ Áp Dụng
+
+| Thành phần | Công nghệ / Thư viện triển khai |
+| :--- | :--- |
+| **Nền tảng phát triển** | **.NET 10.0** (Windows Presentation Foundation - WPF) |
+| **Kiến trúc & Dependency Injection** | **MVVM** (`CommunityToolkit.Mvvm`), `Microsoft.Extensions.DependencyInjection` |
+| **Cơ sở dữ liệu & ORM** | **SQLite** & **Entity Framework Core 10** (`Code-First`, `Auto-Migration & Seeding`) |
+| **Kỹ thuật Giao diện & Đồ họa** | `DataTemplate`, `ControlTemplate`, `DataTrigger`, `ScaleTransform`, `CubicEase`, `BackEase`, `DropShadowEffect` |
+| **Xử lý Bất đồng bộ** | Đa luồng với `async / await`, `Task.Run`, `Dispatcher.Invoke` |
+| **Tài liệu & Báo cáo** | `FlowDocumentReader` & `PrintDialog` (Xuất PDF), `UTF8Encoding` CSV (Xuất Excel) |
+| **Bảo mật** | Băm mật khẩu một chiều chuẩn **SHA-256** (`PasswordHelper`) |
+
+### Cây Thư Mục Dự Án
+
+```text
+QuanLyNhaTro/
+├── README.md                             # Tài liệu tổng quan dự án
+└── src/
+    ├── QuanLyNhaTro.sln                  # Solution quản lý dự án (.NET 10)
+    └── DoAn/                             # Project WPF chính
+        ├── Configurations/               # Cấu hình mở rộng
+        ├── Converters/                   # Bộ chuyển đổi dữ liệu hiển thị UI
+        ├── Data/
+        │   ├── AppDbContext.cs           # Kết nối EF Core SQLite & Khởi tạo CSDL
+        │   └── DbSeeder.cs               # Tự động nạp dữ liệu mẫu Nhà Trọ 8386 Bình Định
+        ├── Helpers/
+        │   └── PasswordHelper.cs         # Thuật toán mã hóa mật khẩu SHA-256
+        ├── Models/
+        │   └── Entities.cs               # Định nghĩa 10 thực thể CSDL (Phong, HopDong, HoaDon...)
+        ├── Repositories/                 # Tầng giao tiếp dữ liệu
+        ├── Services/
+        │   └── AuthService.cs            # Quản lý xác thực và phiên đăng nhập
+        ├── ViewModels/                   # Tầng nghiệp vụ MVVM (9 ViewModels)
+        │   ├── MainViewModel.cs
+        │   ├── DashboardViewModel.cs
+        │   ├── SoDoPhongViewModel.cs
+        │   ├── PhongViewModel.cs
+        │   ├── KhachThueViewModel.cs
+        │   ├── HopDongViewModel.cs
+        │   ├── DienNuocViewModel.cs
+        │   ├── HoaDonViewModel.cs
+        │   └── SuCoViewModel.cs
+        ├── Views/                        # Tầng giao diện XAML & Hiệu ứng
+        │   ├── LoginWindow.xaml
+        │   ├── DashboardView.xaml
+        │   ├── SoDoPhongView.xaml
+        │   ├── PhongView.xaml
+        │   ├── KhachThueView.xaml
+        │   ├── HopDongView.xaml
+        │   ├── DienNuocView.xaml
+        │   ├── HoaDonView.xaml
+        │   ├── PreviewHoaDonWindow.xaml
+        │   └── SuCoView.xaml
+        ├── App.xaml / App.xaml.cs        # Khai báo DI Container & Global Animation Styles
+        └── MainWindow.xaml               # Khung điều hướng chính (Sidebar + ContentControl)
+```
+
+---
+
+<a id="khoi-chay-nhanh"></a>
+## 🚀 6. Hướng Dẫn Khởi Chạy Nhanh & Đăng Nhập
+
+### 1. Cài đặt và Khởi chạy
+* **Yêu cầu:** Windows 10/11, **Visual Studio 2022 / 2026** (workload *.NET Desktop Development*), **.NET 10.0 SDK**.
+* **Thao tác trên Terminal:**
+  ```bash
+  git clone https://github.com/quyphandinh25-glitch/QuanLyNhaTro.git
+  cd QuanLyNhaTro
+  start src/QuanLyNhaTro.sln
+  ```
+* Trong Visual Studio, nhấn **`Ctrl + Shift + B`** để biên dịch, sau đó nhấn **`F5`** để chạy ngay lập tức (File CSDL `QuanLyNhaTro.db` sẽ tự động được sinh ra trong thư mục `bin/Debug/...`).
+
+### 2. Thông tin Đăng nhập Mặc định
+Hệ thống khởi tạo sẵn tài khoản Quản trị viên với toàn quyền sử dụng:
+* **Tài khoản:** `admin`
+* **Mật khẩu:** `123456` *(hoặc `admin123`)*
+
+---
+
+<div align="center">
+  <i>Dự án được phát triển và hoàn thiện 100% các giai đoạn theo chuẩn kiến trúc MVVM trên nền tảng .NET WPF.</i>
+</div>
