@@ -64,7 +64,7 @@ namespace DoAn.Data
                     MatKhauHash = "123456", // Sẽ nâng cấp băm SHA256 ở bước Đăng nhập
                     HoTen = "Chủ Trọ Quản Lý",
                     SoDienThoai = "0909123456",
-                    TenNhaTro = "Hệ Thống Nhà Trọ An Cư",
+                    TenNhaTro = "Nhà Trọ 8386 Bình Định",
                     DiaChiNhaTro = "Quận Bình Thạnh, TP. Hồ Chí Minh",
                     DonGiaDienMacDinh = 3500,
                     DonGiaNuocMacDinh = 20000
