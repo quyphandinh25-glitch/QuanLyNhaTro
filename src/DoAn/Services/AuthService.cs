@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using DoAn.Data;
+﻿using DoAn.Data;
 using DoAn.Helpers;
 using DoAn.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace DoAn.Services
 {
@@ -32,6 +33,7 @@ namespace DoAn.Services
             }
             return false;
         }
+        
 
         public void Logout()
         {

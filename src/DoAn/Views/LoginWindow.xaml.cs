@@ -12,6 +12,7 @@ namespace DoAn.Views
         {
             InitializeComponent();
             _authService = authService;
+            txtUsername.Focus(); // Tự động đặt con trỏ chuột vào ô Tài khoản khi mở app
         }
 
         private void BtnLogin_Click(object sender, RoutedEventArgs e)
@@ -28,8 +29,10 @@ namespace DoAn.Views
             }
             else
             {
-                lblError.Text = "⚠️ Sai tên đăng nhập hoặc mật khẩu! (Mặc định: admin / 123456)";
-                lblError.Visibility = Visibility.Visible;
+                txtError.Text = "⚠️ Tên đăng nhập hoặc mật khẩu không chính xác!";
+                txtError.Visibility = Visibility.Visible;
+                txtPassword.Clear();
+                txtPassword.Focus();
             }
         }
     }

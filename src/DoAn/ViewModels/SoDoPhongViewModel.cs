@@ -25,11 +25,39 @@ namespace DoAn.ViewModels
 
         public string TenTrangThai => TrangThai switch
         {
-            0 => "🟢 Phòng trống",
-            1 => "🔵 Đang thuê",
-            2 => "🟠 Sắp hết hạn",
-            3 => "🔴 Đang bảo trì",
+            0 => "Phòng trống",
+            1 => "Đang thuê",
+            2 => "Sắp hết hạn",
+            3 => "Đang bảo trì",
             _ => "Không xác định"
+        };
+
+        // Bộ mã màu đồng bộ cho chấm tròn Ellipse và Badge trạng thái ở cả hai cột
+        public string MauChamTron => TrangThai switch
+        {
+            0 => "#10B981", // Xanh lá
+            1 => "#2563EB", // Xanh dương
+            2 => "#F59E0B", // Cam
+            3 => "#EF4444", // Đỏ
+            _ => "#64748B"
+        };
+
+        public string MauChuTrangThai => TrangThai switch
+        {
+            0 => "#047857",
+            1 => "#1D4ED8",
+            2 => "#B45309",
+            3 => "#B91C1C",
+            _ => "#334155"
+        };
+
+        public string MauNenBadge => TrangThai switch
+        {
+            0 => "#D1FAE5",
+            1 => "#DBEAFE",
+            2 => "#FEF3C7",
+            3 => "#FEE2E2",
+            _ => "#F1F5F9"
         };
 
         public string TenKhachHienTai { get; set; } = "(Chưa có khách)";
@@ -86,14 +114,22 @@ namespace DoAn.ViewModels
                 .OrderBy(p => p.Tang).ThenBy(p => p.MaPhong)
                 .ToList();
 
-            // Tự động đồng bộ trạng thái Sắp hết hạn (còn <= 15 ngày)
+            // Tự động đồng bộ trạng thái phòng khớp 100% với Hợp đồng thực tế
             foreach (var p in tatCaPhong)
             {
-                var hdHieuLuc = p.HopDongs.FirstOrDefault(h => h.TrangThai == 0);
-                if (hdHieuLuc != null && p.TrangThai != 3)
+                if (p.TrangThai != 3) // Không ghi đè nếu phòng đang Bảo trì
                 {
-                    double soNgayConLai = (hdHieuLuc.NgayKetThuc - DateTime.Now).TotalDays;
-                    p.TrangThai = soNgayConLai <= 15 ? 2 : 1;
+                    var hdHieuLuc = p.HopDongs.FirstOrDefault(h => h.TrangThai == 0);
+                    if (hdHieuLuc != null)
+                    {
+                        double soNgayConLai = (hdHieuLuc.NgayKetThuc - DateTime.Now).TotalDays;
+                        p.TrangThai = soNgayConLai <= 15 ? 2 : 1;
+                    }
+                    else
+                    {
+                        // Nếu không có hợp đồng hiệu lực -> Bắt buộc đưa về Phòng trống (0)
+                        p.TrangThai = 0;
+                    }
                 }
             }
             _db.SaveChanges();
@@ -226,13 +262,19 @@ namespace DoAn.ViewModels
             }
 
             var hd = PhongDangChon.HopDongHienTai;
-            decimal noHoaDon = _db.HoaDons.Where(b => b.HopDongId == hd.Id && b.TrangThai != 2).Sum(b => b.ConNo);
+
+            // Tính chuẩn tổng nợ thực tế (không cộng trùng NoCu giữa các kỳ)
+            decimal noHoaDon = Math.Max(0, _db.HoaDons
+                .Where(b => b.HopDongId == hd.Id)
+                .AsEnumerable()
+                .Sum(b => (b.TongCong - b.NoCu) - b.SoTienDaDong));
+
             decimal tienHoan = hd.TienCoc - noHoaDon;
 
             if (MessageBox.Show(
                 $"Xác nhận trả phòng {PhongDangChon.MaPhong} (Khách: {PhongDangChon.TenKhachHienTai}):\n" +
-                $"• Tiền cọc: {hd.TienCoc:N0} VNĐ\n" +
-                $"• Nợ hóa đơn: {noHoaDon:N0} VNĐ\n" +
+                $"• Tiền cọc đang giữ: {hd.TienCoc:N0} VNĐ\n" +
+                $"• Nợ hóa đơn còn lại: {noHoaDon:N0} VNĐ\n" +
                 $"👉 Hoàn trả khách: {tienHoan:N0} VNĐ\n\n" +
                 $"Bạn muốn hoàn tất trả phòng?",
                 "Xác nhận Trả phòng", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
@@ -255,7 +297,6 @@ namespace DoAn.ViewModels
         {
             if (PhongDangChon == null) return;
 
-            // Nếu đang Bảo trì (3) -> Mở lại phòng về Trống (0) hoặc Đang thuê (1)
             if (PhongDangChon.TrangThai == 3)
             {
                 var suCo = _db.SuCos.Where(s => s.PhongId == PhongDangChon.Id && s.TrangThai != 2).ToList();
